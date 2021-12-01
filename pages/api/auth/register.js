@@ -1,5 +1,5 @@
 import Cookies from 'cookies'
-import { User, sequelize } from '../../../model.js'
+import { User, House, sequelize } from '../../../model.js'
 
 const randomString = length => {
   const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -15,6 +15,9 @@ export default async (req, res) => {
     res.status(405).end() //Method Not Allowed
     return
   }
+
+  //User.sync({ alter: true })
+  //House.sync({ alter: true })
 
   const { email, password, passwordconfirmation } = req.body
 
