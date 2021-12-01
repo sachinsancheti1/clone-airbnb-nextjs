@@ -1,25 +1,33 @@
 import Link from "next/link"
+import { useStoreActions } from "easy-peasy"
 
 export default function Header(props) {
+  const setShowLoginModal = useStoreActions(
+    actions => actions.modals.setShowLoginModal
+  )
+  const setShowRegistrationModal = useStoreActions(
+    actions => actions.modals.setShowRegistrationModal
+  )
+
   return (
-    <div className="nav-container">
-      <Link href="/">
+    <div className='nav-container'>
+      <Link href='/'>
         <a>
-          <img src="/img/logo.png" alt="" />
+          <img src='/img/logo.png' alt='' />
         </a>
       </Link>
 
       <nav>
         <ul>
           <li>
-            <Link href="/register">
-              <a>Sign up</a>
-            </Link>
+            <a href='#' onClick={() => setShowRegistrationModal()}>
+              Sign up
+            </a>
           </li>
           <li>
-            <Link href="/login">
-              <a>Log in</a>
-            </Link>
+            <a href='#' onClick={() => setShowLoginModal()}>
+              Log in
+            </a>
           </li>
         </ul>
       </nav>
