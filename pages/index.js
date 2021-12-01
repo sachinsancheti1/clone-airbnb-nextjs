@@ -1,12 +1,16 @@
-import houses from "../houses.js"
-import House from "../components/House"
-import Layout from "../components/Layout"
+import Cookies from 'cookies'
+import { useStoreActions } from 'easy-peasy'
+import { useEffect } from 'react'
+
+import houses from '../houses.js'
+import House from '../components/House'
+import Layout from '../components/Layout'
 
 const content = (
   <div>
     <h2>Places to stay</h2>
 
-    <div className="houses">
+    <div className='houses'>
       {houses.map((house, index) => {
         return <House key={index} {...house} />
       })}
@@ -24,5 +28,24 @@ const content = (
 )
 
 export default function Home() {
+  const setLoggedIn = useStoreActions(actions => actions.login.setLoggedIn)
+
+  useEffect(() => {
+    if (nextbnb_session) {
+      setLoggedIn(true)
+    }
+  }, [])
+
   return <Layout content={content} />
+}
+
+export async function getServerSideProps({ req, res, query }) {
+  const cookies = new Cookies(req, res)
+  const nextbnb_session = cookies.get('nextbnb_session')
+
+  return {
+    props: {
+      nextbnb_session: nextbnb_session || null
+    }
+  }
 }

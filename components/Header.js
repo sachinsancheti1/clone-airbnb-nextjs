@@ -1,7 +1,10 @@
-import Link from "next/link"
-import { useStoreActions } from "easy-peasy"
+import Link from 'next/link'
+import { useStoreState, useStoreActions } from 'easy-peasy'
 
 export default function Header(props) {
+  const loggedIn = useStoreState(state => state.login.loggedIn)
+  const setLoggedIn = useStoreActions(actions => actions.login.setLoggedIn)
+
   const setShowLoginModal = useStoreActions(
     actions => actions.modals.setShowLoginModal
   )
@@ -17,20 +20,30 @@ export default function Header(props) {
         </a>
       </Link>
 
-      <nav>
-        <ul>
-          <li>
-            <a href='#' onClick={() => setShowRegistrationModal()}>
-              Sign up
-            </a>
-          </li>
-          <li>
-            <a href='#' onClick={() => setShowLoginModal()}>
-              Log in
-            </a>
-          </li>
-        </ul>
-      </nav>
+      {loggedIn ? (
+        <nav>
+          <ul>
+            <li>
+              <a>Logged in</a>
+            </li>
+          </ul>
+        </nav>
+      ) : (
+        <nav>
+          <ul>
+            <li>
+              <a href='#' onClick={() => setShowRegistrationModal()}>
+                Sign up
+              </a>
+            </li>
+            <li>
+              <a href='#' onClick={() => setShowLoginModal()}>
+                Log in
+              </a>
+            </li>
+          </ul>
+        </nav>
+      )}
 
       <style jsx>{`
         ul {
