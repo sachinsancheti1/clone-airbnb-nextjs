@@ -1,20 +1,27 @@
 import { useState } from 'react'
 import axios from 'axios'
+import { useStoreActions } from 'easy-peasy'
 
 export default function LoginModal(props) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+
+  const setLoggedIn = useStoreActions(actions => actions.login.setLoggedIn)
+  const setHideModal = useStoreActions(actions => actions.modals.setHideModal)
 
   const submit = async () => {
     const response = await axios.post('/api/auth/login', {
       email,
       password
     })
-    console.log(response)
 
     if (response.data.status === 'error') {
       alert(response.data.message)
+      return
     }
+
+    setLoggedIn(true)
+    setHideModal(true)
   }
 
   return (
