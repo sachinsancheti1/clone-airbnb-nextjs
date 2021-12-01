@@ -21,7 +21,24 @@ const calcNumberOfNightsBetweenDates = (startDate, endDate) => {
   return dayCount
 }
 
-export default function House({ house, nextbnb_session }) {
+const getBookedDates = async id => {
+  try {
+    const response = await axios.post(
+      'http://localhost:3000/api/houses/booked',
+      { houseId: id }
+    )
+    if (response.data.status === 'error') {
+      alert(response.data.message)
+      return
+    }
+    return response.data.dates
+  } catch (error) {
+    console.error(error)
+    return
+  }
+}
+
+export default function House({ house, nextbnb_session, bookedDates }) {
   const [startDate, setStartDate] = useState()
   const [endDate, setEndDate] = useState()
 
@@ -68,6 +85,7 @@ export default function House({ house, nextbnb_session }) {
                 setStartDate(startDate)
                 setEndDate(endDate)
               }}
+              bookedDates={bookedDates}
             />
 
             {dateChosen && (
@@ -136,11 +154,13 @@ export async function getServerSideProps({ req, res, query }) {
   const cookies = new Cookies(req, res)
   const nextbnb_session = cookies.get('nextbnb_session')
   const house = await HouseModel.findByPk(id)
+  const bookedDates = await getBookedDates(id)
 
   return {
     props: {
       house: house.dataValues,
-      nextbnb_session: nextbnb_session || null
+      nextbnb_session: nextbnb_session || null,
+      bookedDates
     }
   }
 }

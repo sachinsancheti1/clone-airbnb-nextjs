@@ -1,11 +1,11 @@
-import { useState } from "react"
+import { useState } from 'react'
 
-import DayPickerInput from "react-day-picker/DayPickerInput"
-import { DateUtils } from "react-day-picker"
+import DayPickerInput from 'react-day-picker/DayPickerInput'
+import { DateUtils } from 'react-day-picker'
 
-import "react-day-picker/lib/style.css"
-import dateFnsFormat from "date-fns/format"
-import dateFnsParse from "date-fns/parse"
+import 'react-day-picker/lib/style.css'
+import dateFnsFormat from 'date-fns/format'
+import dateFnsParse from 'date-fns/parse'
 
 const parseDate = (str, format, locale) => {
   const parsed = dateFnsParse(str, format, new Date(), { locale })
@@ -15,7 +15,7 @@ const parseDate = (str, format, locale) => {
 const formatDate = (date, format, locale) =>
   dateFnsFormat(date, format, { locale })
 
-const format = "dd MMM yyyy"
+const format = 'dd MMM yyyy'
 
 const today = new Date()
 const tomorrow = new Date(today)
@@ -34,9 +34,13 @@ const numberOfNightsBetweenDates = (startDate, endDate) => {
   return dayCount
 }
 
-export default function DateRangePicker({ datesChanged }) {
+export default function DateRangePicker({ datesChanged, bookedDates }) {
   const [startDate, setStartDate] = useState(today)
   const [endDate, setEndDate] = useState(tomorrow)
+
+  bookedDates = bookedDates.map(date => {
+    return new Date(date)
+  })
 
   return (
     <div className='date-range-picker-container'>
@@ -50,9 +54,12 @@ export default function DateRangePicker({ datesChanged }) {
           placeholder={`${dateFnsFormat(new Date(), format)}`}
           dayPickerProps={{
             modifiers: {
-              disabled: {
-                before: new Date()
-              }
+              disabled: [
+                ...bookedDates,
+                {
+                  before: new Date()
+                }
+              ]
             }
           }}
           onDayChange={day => {
@@ -78,6 +85,7 @@ export default function DateRangePicker({ datesChanged }) {
             modifiers: {
               disabled: [
                 startDate,
+                ...bookedDates,
                 {
                   before: startDate
                 }
