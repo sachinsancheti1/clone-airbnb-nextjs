@@ -117,9 +117,7 @@ export default function House({ house, nextbnb_session, bookedDates }) {
                   <button
                     className='reserve'
                     onClick={async () => {
-                      if (
-                        !(await canReserve(props.house.id, startDate, endDate))
-                      ) {
+                      if (!(await canReserve(house.id, startDate, endDate))) {
                         alert('The dates chosen are not valid')
                         return
                       }
@@ -128,8 +126,7 @@ export default function House({ house, nextbnb_session, bookedDates }) {
                         const sessionResponse = await axios.post(
                           '/api/stripe/session',
                           {
-                            amount:
-                              props.house.price * numberOfNightsBetweenDates
+                            amount: house.price * numberOfNightsBetweenDates
                           }
                         )
                         if (sessionResponse.data.status === 'error') {
@@ -144,7 +141,7 @@ export default function House({ house, nextbnb_session, bookedDates }) {
                         const reserveResponse = await axios.post(
                           '/api/reserve',
                           {
-                            houseId: props.house.id,
+                            houseId: house.id,
                             startDate,
                             endDate,
                             sessionId
