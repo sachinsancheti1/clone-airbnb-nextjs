@@ -1,10 +1,10 @@
 import Head from 'next/head'
-import houses from '../../houses.js'
 import Layout from '../../components/Layout'
 import DateRangePicker from '../../components/DateRangePicker'
 import { useState, useEffect } from 'react'
 import { useStoreActions } from 'easy-peasy'
 import Cookies from 'cookies'
+import { House as HouseModel } from '../../model.js'
 
 const calcNumberOfNightsBetweenDates = (startDate, endDate) => {
   const start = new Date(startDate) //clone
@@ -101,10 +101,11 @@ export async function getServerSideProps({ req, res, query }) {
   const { id } = query
   const cookies = new Cookies(req, res)
   const nextbnb_session = cookies.get('nextbnb_session')
+  const house = await HouseModel.findByPk(id)
 
   return {
     props: {
-      house: houses.filter(house => house.id === parseInt(id))[0],
+      house: house.dataValues,
       nextbnb_session: nextbnb_session || null
     }
   }
