@@ -1,3 +1,4 @@
+import Cookies from 'cookies'
 import { User, sequelize } from '../../../model.js'
 
 const randomString = length => {
@@ -39,6 +40,10 @@ export default async (req, res) => {
       },
       { where: { email } }
     )
+    const cookies = new Cookies(req, res)
+    cookies.set('nextbnb_session', sessionToken, {
+      httpOnly: true // true by default
+    })
     res.end(JSON.stringify({ status: 'success', message: 'User added' }))
   } else {
     res.end(JSON.stringify({ status: 'error', message: 'User already exists' }))
