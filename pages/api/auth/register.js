@@ -16,9 +16,6 @@ export default async (req, res) => {
     return
   }
 
-  //User.sync({ alter: true })
-  //House.sync({ alter: true })
-
   const { email, password, passwordconfirmation } = req.body
 
   if (password !== passwordconfirmation) {
