@@ -1,9 +1,11 @@
 import { Sequelize, Model, DataTypes } from 'sequelize'
 import bcrypt from 'bcrypt'
+import pg from 'pg'
 
 const sequelize = new Sequelize(process.env.POSTGRES_CONNECTION, {
   dialect: 'postgres',
-  logging: false
+  logging: false,
+  dialectModule: pg
 })
 
 class User extends Model {}
